@@ -250,19 +250,23 @@ export const TreeTableHeader = React.memo((props) => {
         }
 
         if (getColumnProp(column, 'filter') && options.renderFilter) {
-            filterElement = getColumnProp(column, 'filterElement') || (
-                <InputText
-                    onInput={(e) => onFilterInput(e, column)}
-                    type={props.filterType}
-                    defaultValue={props.filters && props.filters[getColumnProp(column, 'field')] ? props.filters[getColumnProp(column, 'field')].value : null}
-                    className="p-column-filter"
-                    placeholder={getColumnProp(column, 'filterPlaceholder')}
-                    maxLength={getColumnProp(column, 'filterMaxLength')}
-                    pt={getColumnPTOptions(column, 'filterInput')}
-                    unstyled={props.unstyled}
-                    __parentMetadata={{ parent: props.metaData }}
-                />
-            );
+            if (getColumnProp(column, 'filterElement')) {
+                filterElement = ObjectUtils.getJSXElement(getColumnProp('filterElement'), { field, index, filterModel: model, value, filterApplyCallback, filterCallback })
+            } else {
+                filterElement = (
+                    <InputText
+                        onInput={(e) => onFilterInput(e, column)}
+                        type={props.filterType}
+                        defaultValue={props.filters && props.filters[getColumnProp(column, 'field')] ? props.filters[getColumnProp(column, 'field')].value : null}
+                        className="p-column-filter"
+                        placeholder={getColumnProp(column, 'filterPlaceholder')}
+                        maxLength={getColumnProp(column, 'filterMaxLength')}
+                        pt={getColumnPTOptions(column, 'filterInput')}
+                        unstyled={props.unstyled}
+                        __parentMetadata={{ parent: props.metaData }}
+                    />
+                );
+            }
         }
 
         if (options.filterOnly) {
